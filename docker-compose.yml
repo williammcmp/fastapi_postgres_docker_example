@@ -5,14 +5,14 @@ services:
     container_name: backend
     build: ./backend
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
-    # install requirements.txt
-    
+
     volumes:
       - ./backend/:/usr/backend/app/
     ports:
       - "8002:8000"
     environment:
       - DATABASE_URL=postgresql://hello_fastapi:hello_fastapi@db/hello_fastapi_dev
+ 
   db:
     container_name: db
     image: postgres:13.1-alpine
@@ -23,14 +23,13 @@ services:
       - POSTGRES_PASSWORD=hello_fastapi
       - POSTGRES_DB=hello_fastapi_dev
 
-  
-  front-end:
-    container_name: front-end
+  frontend:
+    container_name: frontend
     build:
       context: .
-      dockerfile: ./front-end/Dockerfile
+      dockerfile: ./frontend/Dockerfile
     ports:
-      - '8084:80'
+      - 8001:80
 
 
 volumes:
