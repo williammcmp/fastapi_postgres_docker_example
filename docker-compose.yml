@@ -1,18 +1,20 @@
 version: "3.3"
 
 services:
-  web:
-    build: ./src
+  backend:
+    container_name: backend
+    build: ./backend
     command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
     # install requirements.txt
     
     volumes:
-      - ./src/:/usr/src/app/
+      - ./backend/:/usr/backend/app/
     ports:
       - "8002:8000"
     environment:
       - DATABASE_URL=postgresql://hello_fastapi:hello_fastapi@db/hello_fastapi_dev
   db:
+    container_name: db
     image: postgres:13.1-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -21,11 +23,21 @@ services:
       - POSTGRES_PASSWORD=hello_fastapi
       - POSTGRES_DB=hello_fastapi_dev
 
+  
+  front-end:
+    container_name: front-end
+    build:
+      context: .
+      dockerfile: ./front-end/Dockerfile
+    ports:
+      - '8084:80'
+
+
 volumes:
   postgres_data:
 
 networks:
   default: 
-    name: hello_fastapi
+    name: FastAPI
 
 
